@@ -76,7 +76,7 @@ public class Converter {
             JSONArray rowHeaders = new JSONArray();
             JSONArray colHeaders = new JSONArray();
             JSONArray data = new JSONArray();
-            JSONArray intermediary;
+            JSONArray record;
             JSONObject output = new JSONObject();
             
             storage = iterator.next();
@@ -94,16 +94,16 @@ public class Converter {
                 storage = iterator.next();
                 rowHeaders.add(storage[0]);
                 
-                intermediary = new JSONArray();
+                record = new JSONArray();
                 
                 for (int i = 1; i < storage.length; ++i) {
                     
                     int integerParser = Integer.parseInt(storage[i]);
-                    intermediary.add(integerParser);
+                    record.add(integerParser);
                     
                 } //END FOR
                 
-                data.add(intermediary);
+                data.add(record);
             
             } //END WHILE
             
@@ -137,7 +137,7 @@ public class Converter {
             JSONArray colHeaders = (JSONArray)input.get("colHeaders");
             JSONArray rowHeaders = (JSONArray)input.get("rowHeaders");
             JSONArray data = (JSONArray)input.get("data");
-            JSONArray intermediary;
+            JSONArray record;
             String[] storage = new String[colHeaders.size()];
             
             for (int i = 0; i < colHeaders.size(); ++i) {
@@ -150,13 +150,13 @@ public class Converter {
             
             for(int i = 0; i < data.size(); ++i) {
                 
-                intermediary = (JSONArray) data.get(i);
-                storage = new String[intermediary.size() + 1];
+                record = (JSONArray) data.get(i);
+                storage = new String[record.size() + 1];
                 storage[0] = (String) rowHeaders.get(i);
                 
-                for (int j = 0; j < intermediary.size(); ++j) {
+                for (int j = 0; j < record.size(); ++j) {
                    
-                    storage[j + 1] = Long.toString((long)intermediary.get(j));
+                    storage[j + 1] = Long.toString((long)record.get(j));
                 
                 } //END NESTED FOR
                 
