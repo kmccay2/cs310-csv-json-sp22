@@ -72,7 +72,49 @@ public class Converter {
             
             // INSERT YOUR CODE HERE
             
-        }        
+            String[] storage;
+            JSONArray rowHeaders = new JSONArray();
+            JSONArray colHeaders = new JSONArray();
+            JSONArray data = new JSONArray();
+            JSONArray intermediary;
+            JSONObject output = new JSONObject();
+            
+            storage = iterator.next();
+            
+            for (int i = 0; i < storage.length; ++i) {
+           
+                colHeaders.add(storage[i]);
+            
+            } //END FOR
+            
+            
+            
+            while (iterator.hasNext()) {
+                
+                storage = iterator.next();
+                rowHeaders.add(storage[0]);
+                
+                intermediary = new JSONArray();
+                
+                for (int i = 1; i < storage.length; ++i) {
+                    
+                    int integerParser = Integer.parseInt(storage[i]);
+                    intermediary.add(integerParser);
+                    
+                } //END FOR
+                
+                data.add(intermediary);
+            
+            } //END WHILE
+            
+            output.put("colHeaders", colHeaders);
+            output.put("rowHeaders", rowHeaders);
+            output.put("data", data);
+            
+            results = JSONValue.toJSONString(output);
+            
+        } //END TRY AND INSERTED CODE
+                    
         catch(Exception e) { e.printStackTrace(); }
         
         return results.trim();
@@ -90,7 +132,41 @@ public class Converter {
             
             // INSERT YOUR CODE HERE
             
-        }
+            JSONParser parser = new JSONParser();
+            JSONObject input = (JSONObject)parser.parse(jsonString);
+            JSONArray colHeaders = (JSONArray)input.get("colHeaders");
+            JSONArray rowHeaders = (JSONArray)input.get("rowHeaders");
+            JSONArray data = (JSONArray)input.get("data");
+            JSONArray intermediary;
+            String[] storage = new String[colHeaders.size()];
+            
+            for (int i = 0; i < colHeaders.size(); ++i) {
+               
+                storage[i] = (String) colHeaders.get(i);
+            
+            } //END FOR
+            
+            csvWriter.writeNext(storage);
+            
+            for(int i = 0; i < data.size(); ++i) {
+                
+                intermediary = (JSONArray) data.get(i);
+                storage = new String[intermediary.size() + 1];
+                storage[0] = (String) rowHeaders.get(i);
+                
+                for (int j = 0; j < intermediary.size(); ++j) {
+                   
+                    storage[j + 1] = Long.toString((long)intermediary.get(j));
+                
+                } //END NESTED FOR
+                
+                csvWriter.writeNext(storage);
+
+            } //END FOR
+
+            results = writer.toString();
+    
+        } //END TRY AND INSERTED CODE 
         
         catch(Exception e) { e.printStackTrace(); }
         
